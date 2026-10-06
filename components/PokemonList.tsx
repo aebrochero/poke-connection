@@ -1,11 +1,5 @@
-// components/PokemonList.tsx
-
 import PokemonCard from "@/components/PokemonCard";
-
-type Pokemon = {
-  name: string;
-  image: string;
-};
+import type { Pokemon } from "@/lib/pokeapi";
 
 type PokemonListProps = {
   pokemons: Pokemon[];

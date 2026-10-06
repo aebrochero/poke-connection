@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Poke Connection
 
-## Getting Started
+Aplicación web desarrollada con Next.js y Tailwind CSS para consultar y explorar Pokémon consumiendo la [PokeAPI](https://pokeapi.co/) REST v2 en tiempo real.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 🛠️ Stack Tecnológico
+
+- **Framework:** [Next.js](https://nextjs.org/) 15.5.27 (App Router)
+- **Librería UI:** [React](https://react.dev/) 19
+- **Lenguaje:** [TypeScript](https://www.typescriptlang.org/) 5
+- **Estilos:** [Tailwind CSS v4](https://tailwindcss.com/)
+- **Gestor de paquetes:** [pnpm](https://pnpm.io/) (v11+)
+- **Fuente de datos:** [PokeAPI](https://pokeapi.co/) REST v2
+
+---
+
+## 📁 Estructura del Proyecto
+
+```text
+poke-connection/
+├── app/
+│   ├── layout.tsx              # Layout raíz, metadatos SEO y fuentes Geist
+│   ├── page.tsx                # Pantalla de inicio con navegación nativa
+│   ├── globals.css             # Directivas y tokens Tailwind CSS v4
+│   └── pokemon-list/
+│       ├── page.tsx            # Catálogo de Pokémon (Server Component)
+│       ├── loading.tsx         # Skeleton visual de carga durante el fetch
+│       └── error.tsx           # Boundary para captura y reintento de errores
+├── components/
+│   ├── PokemonCard.tsx         # Tarjeta optimizada con next/image
+│   └── PokemonList.tsx         # Grid responsive de tarjetas
+├── lib/
+│   └── pokeapi.ts              # Fetcher y extractor de IDs desde PokeAPI
+├── next.config.ts              # Reglas de optimización y dominios remotos
+├── pnpm-workspace.yaml         # Políticas de compilación y overrides seguros
+└── tsconfig.json               # Configuración de TypeScript
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🚀 Rutas Disponibles
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `/` : Pantalla de bienvenida con enlace directo al catálogo.
+- `/pokemon-list` : Catálogo de Pokémon renderizado en el servidor con fallback de carga (`loading.tsx`), manejo de fallos (`error.tsx`) y enlace de retorno.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 💻 Instalación y Ejecución
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+> [!IMPORTANT]
+> Este proyecto utiliza exclusivamente **pnpm** como gestor de paquetes para garantizar resolución determinista y protección contra vulnerabilidades en la cadena de suministro.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Instalar dependencias:**
+   ```bash
+   pnpm install
+   ```
 
-## Deploy on Vercel
+2. **Iniciar servidor de desarrollo:**
+   ```bash
+   pnpm dev
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. **Abrir en el navegador:**
+   [http://localhost:3000](http://localhost:3000)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 📜 Scripts Disponibles
+
+- `pnpm dev`: Inicia el entorno local con Turbopack.
+- `pnpm build`: Genera el bundle de producción optimizado.
+- `pnpm start`: Ejecuta el servidor en modo producción.
+- `pnpm lint`: Analiza el código con ESLint.
+- `pnpm audit`: Inspecciona vulnerabilidades de dependencias.
