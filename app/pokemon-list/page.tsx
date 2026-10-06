@@ -1,21 +1,16 @@
-import Link from "next/link";
 import { getPokemons } from "@/lib/pokeapi";
 import PokemonList from "@/components/PokemonList";
 
 export default async function PokemonPage() {
-  const pokemons = await getPokemons(100);
+  // Obtenemos los 151 Pokémon de la 1era generación (Kanto)
+  const pokemons = await getPokemons(151);
 
   return (
-    <main className="flex min-h-screen flex-col items-center bg-gray-100 py-10 px-6">
-      <div className="w-full max-w-5xl flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold text-blue-600">Lista de Pokémon</h1>
-        <Link
-          href="/"
-          className="text-sm font-medium text-gray-600 hover:text-blue-600 underline underline-offset-4 transition-colors"
-        >
-          ← Volver al inicio
-        </Link>
-      </div>
+    <main className="min-h-screen bg-slate-950 py-8 px-3 sm:px-6 flex flex-col items-center justify-center relative overflow-hidden">
+      {/* Luces y auras de fondo estilo anime */}
+      <div className="absolute -top-40 -left-40 w-96 h-96 bg-red-600/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
+
       <PokemonList pokemons={pokemons} />
     </main>
   );
