@@ -166,10 +166,7 @@ export default function RadarChart({
 
         {/* Etiquetas de las estadísticas en el exterior */}
         {vertices.map((v, i) => {
-          const meta = STAT_LABELS[v.statName] || {
-            label: v.statName,
-            short: v.statName.toUpperCase(),
-          };
+          const statLabel = STAT_LABELS[v.statName] || v.statName.toUpperCase();
           const isTop = v.angle === -Math.PI / 2;
           const isBottom = v.angle === Math.PI / 2;
           const isLeft = Math.cos(v.angle) < -0.2;
@@ -187,7 +184,7 @@ export default function RadarChart({
                 textAnchor={textAnchor}
                 className="text-[10px] font-bold fill-slate-800 dark:fill-slate-100 tracking-wider uppercase font-mono"
               >
-                {meta.short}
+                {statLabel}
               </text>
               <text
                 x={v.labelX}

@@ -41,8 +41,7 @@ export async function getPokemons(limit: number = 151): Promise<Pokemon[]> {
   const data = await res.json();
 
   return data.results.map((pokemon: { name: string; url: string }) => {
-    const rawId = pokemon.url.split("/").filter(Boolean).pop();
-    const id = Number(rawId);
+    const id = Number(pokemon.url.split("/").at(-2));
     return {
       id,
       name: pokemon.name,
@@ -53,19 +52,16 @@ export async function getPokemons(limit: number = 151): Promise<Pokemon[]> {
 }
 
 // In-memory client cache para evitar peticiones repetidas
-const clientDetailCache = new Map<number | string, PokemonDetail>();
+const clientDetailCache = new Map<number, PokemonDetail>();
 
-export async function getPokemonDetail(
-  idOrName: number | string
-): Promise<PokemonDetail> {
-  const cacheKey = typeof idOrName === "string" ? idOrName.toLowerCase() : idOrName;
-  if (clientDetailCache.has(cacheKey)) {
-    return clientDetailCache.get(cacheKey)!;
+export async function getPokemonDetail(id: number): Promise<PokemonDetail> {
+  if (clientDetailCache.has(id)) {
+    return clientDetailCache.get(id)!;
   }
 
-  const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${idOrName}`);
+  const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
   if (!res.ok) {
-    throw new Error(`No se pudo obtener el detalle del Pokémon #${idOrName}`);
+    throw new Error(`No se pudo obtener el detalle del Pokémon #${id}`);
   }
 
   const data = await res.json();
@@ -96,16 +92,13 @@ export async function getPokemonDetail(
     weight: data.weight,
   };
 
-  clientDetailCache.set(cacheKey, detail);
-  clientDetailCache.set(data.id, detail);
-  clientDetailCache.set(data.name.toLowerCase(), detail);
+  clientDetailCache.set(id, detail);
 
   return detail;
 }
 
-export function prefetchPokemonDetail(idOrName: number | string): void {
-  const cacheKey = typeof idOrName === "string" ? idOrName.toLowerCase() : idOrName;
-  if (clientDetailCache.has(cacheKey)) return;
+export function prefetchPokemonDetail(id: number): void {
+  if (clientDetailCache.has(id)) return;
   // Fire and forget
-  getPokemonDetail(idOrName).catch(() => {});
+  getPokemonDetail(id).catch(() => {});
 }
