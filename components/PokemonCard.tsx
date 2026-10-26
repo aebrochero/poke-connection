@@ -8,32 +8,59 @@ import { prefetchPokemonDetail } from "@/lib/pokeapi";
 type PokemonCardProps = {
   pokemon: Pokemon;
   onClick: (pokemon: Pokemon) => void;
+  isFavorite?: boolean;
+  onToggleFavorite?: (e: React.MouseEvent, pokemon: Pokemon) => void;
 };
 
-export default function PokemonCard({ pokemon, onClick }: PokemonCardProps) {
+export default function PokemonCard({
+  pokemon,
+  onClick,
+  isFavorite = false,
+  onToggleFavorite,
+}: PokemonCardProps) {
   const handleMouseEnter = () => {
     prefetchPokemonDetail(pokemon.id);
   };
 
   return (
-    <motion.button
-      type="button"
-      onClick={() => onClick(pokemon)}
+    <motion.div
       onMouseEnter={handleMouseEnter}
       whileHover={{ scale: 1.05, y: -4 }}
       whileTap={{ scale: 0.96 }}
       transition={{ type: "spring", stiffness: 350, damping: 20 }}
-      className="group relative flex flex-col items-center bg-gradient-to-b from-slate-800 to-slate-900 border-2 border-slate-700/80 hover:border-yellow-400/80 rounded-2xl p-4 shadow-lg hover:shadow-yellow-400/20 transition-colors text-left cursor-pointer overflow-hidden focus:outline-none focus:ring-2 focus:ring-yellow-400"
+      className="group relative flex flex-col items-center bg-gradient-to-b from-slate-800 to-slate-900 border-2 border-slate-700/80 hover:border-yellow-400/80 rounded-2xl p-4 shadow-lg hover:shadow-yellow-400/20 transition-colors text-left cursor-pointer overflow-hidden focus-within:ring-2 focus-within:ring-yellow-400"
+      onClick={() => onClick(pokemon)}
     >
       {/* Fondo con brillo sutil en hover */}
       <div className="absolute inset-0 bg-radial from-yellow-400/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
 
-      {/* ID de Pokédex */}
+      {/* Cabecera de la tarjeta: ID y botón de Favorito (Pokéball) */}
       <div className="w-full flex justify-between items-center mb-1 z-10">
         <span className="font-mono text-[11px] font-bold text-slate-400 group-hover:text-yellow-400 transition-colors">
           #{String(pokemon.id).padStart(3, "0")}
         </span>
-        <div className="w-2 h-2 rounded-full bg-emerald-400/80 group-hover:animate-ping" />
+
+        {/* Botón interactivo de Favorito */}
+        {onToggleFavorite ? (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleFavorite(e, pokemon);
+            }}
+            className={`p-1 rounded-full text-xs transition-transform hover:scale-125 cursor-pointer ${
+              isFavorite
+                ? "text-red-500 drop-shadow-[0_0_6px_rgba(239,68,68,0.8)]"
+                : "text-slate-500 hover:text-red-400 opacity-60 group-hover:opacity-100"
+            }`}
+            title={isFavorite ? "Quitar de favoritos" : "Guardar en favoritos"}
+            aria-label="Alternar favorito"
+          >
+            {isFavorite ? "❤️" : "🤍"}
+          </button>
+        ) : (
+          <div className="w-2 h-2 rounded-full bg-emerald-400/80 group-hover:animate-ping" />
+        )}
       </div>
 
       {/* Contenedor de la Imagen */}
@@ -57,6 +84,6 @@ export default function PokemonCard({ pokemon, onClick }: PokemonCardProps) {
       <span className="mt-2 text-[10px] font-mono uppercase tracking-wider text-slate-400 group-hover:text-slate-900 group-hover:bg-yellow-400 px-2 py-0.5 rounded-full transition-all">
         Ver Datos ➜
       </span>
-    </motion.button>
+    </motion.div>
   );
 }
